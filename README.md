@@ -1,4 +1,4 @@
-# Panorama Generator in MATLAB
+# Panoramic Image Generator in MATLAB
 A MATLAB script to generate panoramic images, using SIFT &amp; RANSAC. Also includes experiments with raw-pixel based descriptors.
 
 # 1. Preparing Data
