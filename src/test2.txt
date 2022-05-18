@@ -1,0 +1,6 @@
+..\img\goldengate\goldengate-00.png
+..\img\goldengate\goldengate-01.png
+..\img\goldengate\goldengate-02.png
+..\img\goldengate\goldengate-03.png
+..\img\goldengate\goldengate-04.png
+..\img\goldengate\goldengate-05.png

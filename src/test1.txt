@@ -1,0 +1,13 @@
+..\img\fishbowl\fishbowl-00.png
+..\img\fishbowl\fishbowl-01.png
+..\img\fishbowl\fishbowl-02.png
+..\img\fishbowl\fishbowl-03.png
+..\img\fishbowl\fishbowl-04.png
+..\img\fishbowl\fishbowl-05.png
+..\img\fishbowl\fishbowl-06.png
+..\img\fishbowl\fishbowl-07.png
+..\img\fishbowl\fishbowl-08.png
+..\img\fishbowl\fishbowl-09.png
+..\img\fishbowl\fishbowl-10.png
+..\img\fishbowl\fishbowl-11.png
+..\img\fishbowl\fishbowl-12.png
