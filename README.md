@@ -8,13 +8,14 @@ The images that will be stitched together are given below:
 <br>
 <p align="center"><i>Figure 1: Fishbowl image set</i></p>
 
+
 ![Figure 2: Golden Gate image set](/readme_img/fig2.png)
 <br>
 <p align="center"><i>Figure 2: Golden Gate image set</i></p>
 
 # 2. Detecting and Describing Local Features
 
-# a) Key Points (Interest Points)
+## a) Key Points (Interest Points)
 
 The following images show all drawn key points in the first images of both
 image sets. Some of the key points were too small, so they were not shown by
@@ -27,9 +28,9 @@ MATLAB.
 <br>
 <p align="center"><i>Figure 4: Key Points for the 0th image of golden gate image set</i></p>
 
-# b) Descriptors
+## b) Descriptors
 
-# i. SIFT Descriptor (Gradient Based)
+### i. SIFT Descriptor (Gradient Based)
 
 The following images show 200 randomly selected SIFT descriptors from
 the first images of Golden Gate and Fishbowl image sets. The reason for displaying
@@ -44,19 +45,19 @@ display all of them at once.
 <br>
 <p align="center"><i>Figure 6: Random 200 SIFT Descriptors for the 0th image in fishbowl image set</i></p>
 
-# ii. Raw-Pixel Based Descriptor
+### ii. Raw-Pixel Based Descriptor
 
 Raw-pixel based descriptor was implemented as follows.
 
 
-Consider a keypoint k 1 in I 1
+Consider a keypoint k_1 in I_1
 
-Form a square binary mask,located at k 1 ,
-where the distance between sides and k 1 is the scale of the keypoint.
+Form a square binary mask, located at k_1, where the distance between
+sides and k_1 is the scale of the keypoint.
 
-
-Rotate this square counter−clockwise,amount of orientation of k 1
-Compute the histogram of I with respect to the mask
+Rotate this square counter−clockwise,amount of orientation of k_1.
+Let the sub_image that is contained by this mask be I_2.
+Compute the histogram of I_2 with respect to the mask,
 Below images show example rotated square window for some key point:
 
 ![Figure 7 : Example key point selected from one of the images. Scale is magnified, the angle was
@@ -94,7 +95,7 @@ point k 1 was done by finding the key point k 2 that is:
 
 - closest to k 1 (nearest neighbour (nn) of k 1 in the second image)
 - its distance between k 1 is smaller than a threshold T, where T is defined by:
-- T := (The distance between k 1 and its second-nearest neighbour) X (Threshold ratio R) <br>
+    - T := (The distance between k_1 and its second-nearest neighbour) X (Threshold ratio, R) <br>
 
 Instead of finding a constant optimal distance T, the T distance was tuned
 dynamically, with respect to the second-nearest neighbour, as the distance between
@@ -108,13 +109,13 @@ for a keypoint k_1 in I_1:
     nn_dist= min(∀k_2 ∈ I_2) { eucl_dist(k_1 ,k_2 ) }
     nn = {k_2 | eucl_dist(k 1 ,k 2 ) = nn_dist , ∃k_2 ∈ I_2 }
     second_nn_dist = min (∀k_2 ∈ I_2 - {nn}) { eucl_dist(k_1, k_2) }
-    second_nn = {k_2 | eucl_dist(k_1 ,k_2) = second_nn_dist, ∃k_2 ∈I_2 − {nn} }
+    second_nn = {k_2 | eucl_dist(k_1, k_2) = second_nn_dist, ∃k_2 ∈I_2 − {nn} }
     T = second_nn_dist ∗ R
     if nn_dist < T and second_nn exists:
         k_1 matches with nn
 ```
 
-# a) Using SIFT Descriptors
+## a) Using SIFT Descriptors
 
 ![Figure 11: Golden Gate - matched features between 0th (right) image and 1st (left) using SIFT
 descriptors](/readme_img/fig11.png)
@@ -126,7 +127,7 @@ descriptors</i></p>
 <br>
 <p align="center"><i>Figure 12: Fishbowl - matched features between 0th (right) image and 1st (left) using SIFT descriptors</i></p>
 
-# b) Using Raw-Pixel Based Descriptors
+## b) Using Raw-Pixel Based Descriptors
 
 Below are the matched features for 0th and 1st images of two image sets. It
 should be noted that, with the raw-pixel based descriptors, we have even less number
@@ -152,7 +153,7 @@ The source [2], which explains image stitching using projective
 transformations and SURF descriptors, were helpful in the implementation of this step.
 
 
-# a) RANSAC Parameter Tuning
+## a) RANSAC Parameter Tuning
 
 For RANSAC algorithm, estimateGeometricTransformation2D()
 method was used to estimate an affine transformation between two pairs, whose
@@ -161,22 +162,23 @@ features were matched [3]. The parameters were tuned as following:
 `MaxNumTrials = 50 000` : This parameter was set as high as possible
 to give freedom for tuning other parameters. However, it should not be
 too large, like 1 million, so that computation of each panorama does
-not take more than 1 minute.<br>
+not take more than 1 minute.
+
+
 `Confidence = 99.99`: Increasing this parameter along with
 MaxDistance was helpful overall. In fact, increasing the confidence
 interval will lead in more tight bounds for the expected transformations
-matrices.<br>
+matrices.
+
 `MaxDistance = 0.1`: This parameter had default value of 1.5.
 However, with the default values, the estimated transformations had
 mismatches, even for objects that were very far away, in which affine
 transformations perform well. Therefore, more features needed to be
 marked as outliers, so that RANSAC finds a transformation that will
 result in a rotation, shear, and scaling, instead of straight translations.
-<br><br>
+
 While the raw-pixel based descriptor was used, those parameters were
 tuned such that if estimation fails, the parameters were flexed exponentially:
-
-
 ```
 elseif (descriptor_choice == "raw")
   conf=80;
@@ -198,7 +200,7 @@ elseif (descriptor_choice == "raw")
   end
 end
 ```
-# b) Estimating the Image in the Center
+## b) Estimating the Image in the Center
 
 However, raw image registration was not enough to get good results. Since
 the transformations were starting from a point and continued with a straight rotation,
@@ -218,7 +220,7 @@ significance of this step in the fishbowl image:
 <br>
 <p align="center"><i>Figure 16: Without estimating the center, and applying inverse transform, golden gate</i></p>
 
-# c) Outputs - Gradient Based Descriptor
+## c) Outputs - Gradient Based Descriptor
 
 SIFT descriptors work well, and we can observe that matches generated by
 its descriptor work very well. The only remaining problem with these is the
@@ -235,7 +237,7 @@ overlapping regions.
 <br>
 <p align="center"><i>Figure 18: Output for the image registration step, using gradient based descriptor, golden gate</i></p>
 
-# d) Outputs - Raw Pixel Based Descriptor
+## d) Outputs - Raw Pixel Based Descriptor
 
 The raw-pixel based descriptor works surprisingly well on the golden gate
 image set. However, it must be noted that when matches coming from raw pixel based
@@ -281,10 +283,7 @@ according to the distance of a pixel in the overlapped region to the centre of e
 of the images.
 
 # 6. Discussion
-
-<br>
-
-# a) Gradient based descriptors vs. Raw-pixel based descriptors
+## a) Gradient based descriptors vs. Raw-pixel based descriptors
 
 Raw-pixel based descriptor fails to perform as good as the gradient
 based descriptor. In addition to the reasons explained in 3.b., this could also stem
@@ -297,7 +296,7 @@ and scene dependent, and it is more likely to fail with a different scene, as th
 same parameters may not work with those sets, even if we tune it on runtime, as
 shown in Figure 15.
 
-# b) Which images are harder to stitch together and why?
+## b) Which images are harder to stitch together and why?
 
 Overall, the image stitching process using affine transformations may not
 perform well if the scene being captured is close to the camera, resulting in large
@@ -307,8 +306,6 @@ outputs in 4.c.
 In Figure 17 and 19, for instance, the golden gate output has some errors
 on the left, which are closer to the camera. In Figure 16 and 18, for instance, the
 output has more errors than golden gate overall, because the fishbowl scene is closer
-
-
 to the camera compared to golden gate. Therefore, the set of images capturing a
 closer scene will be harder to stitch together due to the limitations of the affine
 transformations.
@@ -341,6 +338,3 @@ stitching.html. [Accessed: Apr. 4, 2022].
 [3] “estimateGeometricTransform2D,” MathWorks. [Online]. Available:
 https://www.mathworks.com/help/vision/ref/estimategeometrictransform2d.html.
 [Accessed: Apr. 4, 2022].
-
-
-
